@@ -86,8 +86,22 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "712f056788424ba180a53f9c459109d0"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+    TrackJS.track('Testing TrackJS!');
+  </script>
+                        
+  <script>
+    class EmptyError extends Error {
+      constructor(message) {
+        super(message); // (1)
+        this.name = 'EmptyError'; // (2)
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +109,66 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      // output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      if(firstNum == '' || secondNum == ''){
+        throw new EmptyError('Empty input, please fill in a valid number');
+      }
+      try {
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch(error) {
+        console.log('Invalid input');
+      } finally {
+        console.log('finally block');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', () => {
+      console.log('this is console.log()');
+    });
+    errorBtns[1].addEventListener('click', () => {
+      console.error('this is console.error()');
+    });
+    errorBtns[2].addEventListener('click', () => {
+      console.count('this is console.count()');
+    });
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('this is console.warn()');
+    });
+    errorBtns[4].addEventListener('click', () => {
+       console.assert(1 % 2 == 0, '%o', 'the number 1 is not even');
+    });
+    errorBtns[5].addEventListener('click', () => {
+       console.clear();
+    });
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(document.querySelector('button'));
+    });
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(document.querySelector('button'));
+    });
+    errorBtns[8].addEventListener('click', () => {
+      console.group('starting group');
+    });
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+    errorBtns[10].addEventListener('click', () => {
+      console.table([{class: 'Software Engineering', code: 110}, {class: 'Recommender Systems', code: 158}]);
+    });
+    errorBtns[11].addEventListener('click', () => {
+      console.time('timer');
+    });
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('timer');
+    });
+    errorBtns[13].addEventListener('click', () => {
+      console.trace();
+    });
+    errorBtns[14].addEventListener('click', () => {
+      throw new Error('Global Error');
+    });
   </script>
 </body>
 
